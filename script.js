@@ -129,12 +129,11 @@ async function ambilDataAnggota() {
 
         console.log('Data yang diterima:', data);
 
-        if (data.values && data.values.length > 1) {
-            const container = document.getElementById('anggota-container');
-            container.innerHTML = '';
+        const container = document.getElementById('anggota-container');
+        container.innerHTML = '';
 
-            for (let i = 2
-                ; i < data.values.length; i++) {
+        if (data.values && data.values.length > 1) {
+            for (let i = 2; i < data.values.length; i++) {
                 const [nama, nim, linkFotoProfil, linkPortofolio] = data.values[i];
 
                 console.log(`Memproses data: ${nama}, ${nim}, ${linkFotoProfil}, ${linkPortofolio}`);
@@ -160,10 +159,18 @@ async function ambilDataAnggota() {
                 container.innerHTML += anggotaHTML;
             }
         } else {
-            console.error('Data tidak ditemukan atau format tidak sesuai');
+            throw new Error('Data tidak ditemukan atau format tidak sesuai');
         }
     } catch (error) {
         console.error('Terjadi kesalahan:', error);
+        const container = document.getElementById('anggota-container');
+        container.innerHTML = `
+            <div class="col-12 text-center">
+                <div class="alert alert-danger" role="alert">
+                    Data gagal dimuat. Silakan periksa kembali koneksi jaringan Anda dan coba lagi.
+                </div>
+            </div>
+        `;
     }
 }
 
@@ -172,3 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
     handleNavbarScroll();
     ambilDataAnggota();
 });
+
+
+
