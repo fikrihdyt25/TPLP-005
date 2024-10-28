@@ -167,10 +167,11 @@ footer {
     background-color: #3498db;
     color: #ecf0f1;
     text-align: center;
-    padding: 1.5rem;
+    padding: 0.8rem;
     position: relative;
     bottom: 0;
     width: 100%;
+    font-size: 0.9rem;
 }
 
 /* Responsif */
