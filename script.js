@@ -119,9 +119,9 @@ document.head.appendChild(navbarStyle);
 
 async function ambilDataAnggota() {
     try {
-        const sheetId = '1mjkvGFU4Z6E8REd-muQENlYYiLe4I1VPndGGCut7vbg';
+        const sheetId = '11m8u9p4JimSMh7hMMhrBwaaJPKSbci0JqRvkjXida3Q';
         const sheetName = 'Sheet1';
-        const apiKey = 'AIzaSyCU4np3XLD7-TJaxAww9wQYbKiROTHLY-Y';
+        const apiKey = 'AIzaSyDa4vcPBXMuKZz8xnT6G1t04lSpSxzvjnU';
 
         const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}?key=${apiKey}`;
         const response = await fetch(url);
@@ -133,7 +133,7 @@ async function ambilDataAnggota() {
         container.innerHTML = '';
 
         if (data.values && data.values.length > 1) {
-            for (let i = 2; i < data.values.length; i++) {
+            for (let i = 1; i < data.values.length; i++) {
                 const [nama, nim, linkFotoProfil, linkPortofolio] = data.values[i];
 
                 console.log(`Memproses data: ${nama}, ${nim}, ${linkFotoProfil}, ${linkPortofolio}`);
@@ -167,7 +167,7 @@ async function ambilDataAnggota() {
         container.innerHTML = `
             <div class="col-12 text-center">
                 <div class="alert alert-danger" role="alert">
-                    Mohon Maaf,Kami sedang memperbaiki halaman ini.
+                    Mohon Maaf,Kami sedang memperbaiki halaman ini.Kami sedang Memindahkan Data ke Tempat Baru.
                 </div>
             </div>
         `;
