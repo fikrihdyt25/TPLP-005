@@ -167,7 +167,7 @@ async function ambilDataAnggota() {
         container.innerHTML = `
             <div class="col-12 text-center">
                 <div class="alert alert-danger" role="alert">
-                    Data gagal dimuat. Silakan periksa kembali koneksi jaringan Anda dan coba lagi.
+                    Mohon Maaf,Kami sedang memperbaiki halaman ini.
                 </div>
             </div>
         `;
