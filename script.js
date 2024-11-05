@@ -180,5 +180,193 @@ document.addEventListener('DOMContentLoaded', () => {
     ambilDataAnggota();
 });
 
+// Fungsi untuk menampilkan/menyembunyikan chat bot
+function toggleChat() {
+    const chatContainer = document.querySelector('.chat-container');
+    if (chatContainer.style.display === 'none' || chatContainer.style.display === '') {
+        chatContainer.style.display = 'block';
+    } else {
+        chatContainer.style.display = 'none';
+    }
+}
 
+// Fungsi untuk menghapus chat
+function endChat() {
+    const chatBox = document.getElementById('chatBox');
+    if (chatBox) {
+        chatBox.innerHTML = `
+            <div class="chat-message bot-message" style="text-align: left;">
+                <strong>Bot:</strong> Halo! Saya adalah chat bot TPLP-005. Ada yang bisa saya bantu?
+            </div>
+        `;
+    }
+}
 
+// Fungsi untuk menangani pesan chat
+function handleChat() {
+    const chatBox = document.getElementById('chatBox');
+    if (chatBox) {
+        chatBox.innerHTML = `
+            <div class="chat-message bot-message" style="text-align: left;">
+                <strong>Bot:</strong> Halo! Saya adalah chat bot TPLP-005. Ada yang bisa saya bantu?
+            </div>
+        `;
+    }
+}
+
+// Fungsi untuk menambahkan pesan ke chat box
+function addMessage(message, sender) {
+    const chatBox = document.getElementById('chatBox');
+    const messageClass = sender === 'user' ? 'user-message' : 'bot-message';
+    const senderName = sender === 'user' ? 'Anda' : 'Bot';
+    const alignment = sender === 'user' ? 'right' : 'left';
+    
+    chatBox.innerHTML += `
+        <div class="chat-message ${messageClass}" style="text-align: ${alignment};">
+            <strong>${senderName}:</strong> ${message}
+        </div>
+    `;
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Inisialisasi API Gemini
+const GEMINI_API_KEY = 'AIzaSyBa4I3pLN9hT0tFbjG8bG09QT8jqufGhgE';
+
+async function getGeminiResponse(message) {
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{
+                        text: message
+                    }]
+                }]
+            })
+        });
+
+        const data = await response.json();
+        if (data.candidates && data.candidates[0].content.parts[0].text) {
+            return data.candidates[0].content.parts[0].text;
+        }
+        return 'Maaf, saya tidak dapat memproses pertanyaan Anda saat ini.';
+    } catch (error) {
+        console.error('Error:', error);
+        return 'Terjadi kesalahan dalam memproses pertanyaan Anda.';
+    }
+}
+
+// Fungsi untuk mendapatkan respon bot berdasarkan kata kunci
+function getBotReply(message) {
+    message = message.toLowerCase();
+    
+    const responses = {
+        'halo': 'Halo! Ada yang bisa saya bantu?',
+        'hai': 'Halo! Ada yang bisa saya bantu?', 
+        'hi': 'Halo! Ada yang bisa saya bantu?',
+        'jadwal': 'Untuk informasi jadwal kuliah, silakan kunjungi website FTI UNPAM di www.ftiunpam.ac.id',
+        'kuliah': 'Untuk informasi jadwal kuliah, silakan kunjungi website FTI UNPAM di www.ftiunpam.ac.id',
+        'tugas': 'Tugas-tugas akan diperbarui secara berkala. Silakan periksa bagian Tugas di halaman utama.',
+        'pembayaran': 'Untuk informasi pembayaran kuliah, silakan hubungi bagian keuangan di lantai 1 gedung A atau cek pengumuman terbaru.',
+        'biaya': 'Untuk informasi pembayaran kuliah, silakan hubungi bagian keuangan di lantai 1 gedung A atau cek pengumuman terbaru.',
+        'terima kasih': 'Sama-sama! Ada yang bisa saya bantu lagi?',
+        'makasih': 'Sama-sama! Ada yang bisa saya bantu lagi?',
+        'dosen': 'Untuk informasi tentang dosen pengajar, silakan hubungi bagian akademik di lantai 2 gedung A atau kunjungi website fakultas.',
+        'pengajar': 'Untuk informasi tentang dosen pengajar, silakan hubungi bagian akademik di lantai 2 gedung A atau kunjungi website fakultas.',
+        'ujian': 'Informasi jadwal ujian akan diumumkan melalui website fakultas dan grup kelas. Silakan cek secara berkala.',
+        'uas': 'Informasi jadwal ujian akan diumumkan melalui website fakultas dan grup kelas. Silakan cek secara berkala.',
+        'uts': 'Informasi jadwal ujian akan diumumkan melalui website fakultas dan grup kelas. Silakan cek secara berkala.',
+        'nilai': 'Untuk melihat nilai dan IPK, silakan login ke portal akademik my.unpam.ac.id',
+        'ipk': 'Untuk melihat nilai dan IPK, silakan login ke portal akademik my.unpam.ac.id',
+        'krs': 'Pengisian KRS dan registrasi dapat dilakukan melalui portal akademik my.unpam.ac.id. Pastikan sudah melunasi pembayaran semester.',
+        'registrasi': 'Pengisian KRS dan registrasi dapat dilakukan melalui portal akademik my.unpam.ac.id. Pastikan sudah melunasi pembayaran semester.',
+        'sertifikat': 'Untuk informasi sertifikat dan SKPI, silakan hubungi bagian akademik fakultas di lantai 2 gedung A.',
+        'skpi': 'Untuk informasi sertifikat dan SKPI, silakan hubungi bagian akademik fakultas di lantai 2 gedung A.',
+        'beasiswa': 'Informasi beasiswa dapat dilihat di pengumuman fakultas atau website kemahasiswaan UNPAM di kemahasiswaan.unpam.ac.id',
+        'wisuda': 'Informasi wisuda akan diumumkan melalui website universitas. Pastikan semua persyaratan sudah dipenuhi.',
+        'ketua kelas': 'Ketua Kelas TPLP 005 adalah Saiyah Awaliyah. Untuk informasi lebih lanjut silakan hubungi melalui email: sudo-apt-get@gmail.com',
+        'saiyah': 'Ketua Kelas TPLP 005 adalah Saiyah Awaliyah. Untuk informasi lebih lanjut silakan hubungi melalui email: sudo-apt-get@gmail.com',
+        'awaliyah': 'Ketua Kelas TPLP 005 adalah Saiyah Awaliyah. Untuk informasi lebih lanjut silakan hubungi melalui email: sudo-apt-get@gmail.com',
+        'kontak ketua kelas': 'Ketua Kelas TPLP 005 adalah Saiyah Awaliyah. Untuk informasi lebih lanjut silakan hubungi melalui email: sudo-apt-get@gmail.com',
+        'siapa ketua kelasnya': 'Ketua Kelas TPLP 005 adalah Saiyah Awaliyah dan Wakil Ketua Kelas adalah Risky Akbar',
+        'bisa bantu': 'Ya, saya bisa membantu Anda terkait perkuliahan di kelas TPLP-005',
+        'senin': 'Jadwal Senin:\n1. METODE PENELITIAN - WASIS HARYONO (08.50-10.30)\n2. DIGITAL ENTREPRENEURSHIP - HADI ZAKARIA (10.30-12.10)\n3. PENGOLAHAN CITRA DIGITAL - DEVI DAMAYANTI (13.00-14.40)\n4. SISTEM INFORMASI MANAJEMEN - HADI ZAKARIA (14.40-16.20)',
+        'selasa': 'Jadwal Selasa:\n1. PEMROGRAMAN WEB I - FAJAR AGUNG NUGROHO (10.30-12.10)\n2. TEKNIK RISET OPERASIONAL - FARIZI ILHAM (13.00-14.40)\n3. MACHINE LEARNING - PERANI ROSYANI (14.40-16.20)',
+        'rabu': 'Jadwal Rabu:\n1. KECERDASAN BUATAN - RISWAL NAFI SIREGAR (10.30-12.10)',
+        'jadwal senin': 'Jadwal Senin:\n1. METODE PENELITIAN - WASIS HARYONO (08.50-10.30)\n2. DIGITAL ENTREPRENEURSHIP - HADI ZAKARIA (10.30-12.10)\n3. PENGOLAHAN CITRA DIGITAL - DEVI DAMAYANTI (13.00-14.40)\n4. SISTEM INFORMASI MANAJEMEN - HADI ZAKARIA (14.40-16.20)',
+        'jadwal selasa': 'Jadwal Selasa:\n1. PEMROGRAMAN WEB I - FAJAR AGUNG NUGROHO (10.30-12.10)\n2. TEKNIK RISET OPERASIONAL - FARIZI ILHAM (13.00-14.40)\n3. MACHINE LEARNING - PERANI ROSYANI (14.40-16.20)', 
+        'jadwal rabu': 'Jadwal Rabu:\n1. KECERDASAN BUATAN - RISWAL NAFI SIREGAR (10.30-12.10)',
+        'mata kuliah': 'Mata Kuliah Semester ini:\n1. METODE PENELITIAN\n2. DIGITAL ENTREPRENEURSHIP\n3. PENGOLAHAN CITRA DIGITAL\n4. SISTEM INFORMASI MANAJEMEN\n5. PEMROGRAMAN WEB I\n6. TEKNIK RISET OPERASIONAL\n7. MACHINE LEARNING\n8. KECERDASAN BUATAN',
+        'daftar dosen': 'Daftar Dosen Pengajar:\n1. WASIS HARYONO\n2. HADI ZAKARIA\n3. DEVI DAMAYANTI\n4. FAJAR AGUNG NUGROHO\n5. FARIZI ILHAM\n6. PERANI ROSYANI\n7. RISWAL NAFI SIREGAR'
+    };
+
+    for (let key in responses) {
+        if (message.includes(key)) {
+            return responses[key];
+        }
+    }
+
+    return null; // Return null jika tidak ada respon yang cocok
+}
+
+// Fungsi untuk menangani pengiriman pesan
+async function handleMessage() {
+    const chatBox = document.getElementById('chatBox');
+    const userInput = document.getElementById('userInput');
+    const message = userInput.value.trim();
+
+    if (!message) return;
+
+    // Tampilkan pesan pengguna
+    addMessage(message, 'user');
+    userInput.value = '';
+
+    // Coba dapatkan respon dari daftar yang sudah ditentukan
+    const standardResponse = getBotReply(message);
+
+    if (standardResponse) {
+        // Jika ada respon standar, gunakan itu
+        addMessage(standardResponse, 'bot');
+    } else {
+        // Jika tidak ada respon standar, gunakan Gemini
+        const loadingMessage = 'Sedang memproses pertanyaan Anda...';
+        addMessage(loadingMessage, 'bot');
+        
+        try {
+            const geminiResponse = await getGeminiResponse(message);
+            // Hapus pesan loading
+            chatBox.lastElementChild.remove();
+            addMessage(geminiResponse, 'bot');
+        } catch (error) {
+            // Hapus pesan loading
+            chatBox.lastElementChild.remove();
+            addMessage('Maaf, terjadi kesalahan dalam memproses pertanyaan Anda.', 'bot');
+        }
+    }
+}
+
+// Inisialisasi chat saat dokumen dimuat
+document.addEventListener('DOMContentLoaded', () => {
+    handleChat();
+    
+    // Tambahkan event listener untuk tombol kirim, input enter, dan end chat
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+    const endChatButton = document.getElementById('endChatButton');
+    
+    if (userInput && sendButton) {
+        sendButton.addEventListener('click', handleMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleMessage();
+            }
+        });
+    }
+
+    if (endChatButton) {
+        endChatButton.addEventListener('click', endChat);
+    }
+});

@@ -1,4 +1,5 @@
 /* Reset dan Gaya Dasar */
+
 * {
     margin: 0;
     padding: 0;
@@ -16,7 +17,7 @@ body {
 header {
     background-color: #3498db;
     color: #fff;
-    padding: 0.5rem; /* Mengurangi padding header */
+    padding: 0.5rem;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
@@ -25,17 +26,17 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 0.5rem; /* Mengurangi margin bottom */
+    margin-bottom: 0.5rem;
 }
 
 .logo img {
-    max-width: 80px; /* Mengurangi ukuran logo */
+    max-width: 80px;
     height: auto;
-    margin-bottom: 0.3rem; /* Mengurangi margin bottom logo */
+    margin-bottom: 0.3rem;
 }
 
 header h1 {
-    font-size: 1.8rem; /* Mengurangi ukuran font */
+    font-size: 1.8rem;
     font-weight: 700;
 }
 
@@ -105,14 +106,11 @@ h2 {
     border-collapse: collapse;
     margin-top: 1rem;
     font-size: 0.8rem;
-    overflow-x: auto;
-    display: block;
 }
 
 .table th, .table td {
     padding: 0.5rem;
     border: 1px solid #dee2e6;
-    white-space: nowrap;
 }
 
 .table thead th {
@@ -125,27 +123,6 @@ h2 {
 
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: rgba(0,0,0,.05);
-}
-
-@media (max-width: 767px) {
-    .table {
-        font-size: 0.7rem;
-    }
-    
-    .table th, .table td {
-        padding: 0.3rem;
-    }
-}
-
-/* Footer */
-footer {
-    background-color: #3498db;
-    color: #fff;
-    text-align: center;
-    padding: 1rem;
-    position: relative;
-    bottom: 0;
-    width: 100%;
 }
 
 /* Responsif */
@@ -214,11 +191,8 @@ footer {
     .table th, .table td {
         padding: 0.75rem;
     }
-
-    footer {
-        padding: 1.5rem;
-    }
 }
+
 /* Informasi Penting */
 #pengumuman {
     padding: 3rem 0;
@@ -318,6 +292,7 @@ footer {
     }
 }
 
+/* Footer */
 footer {
     background-color: #3498db;
     color: #fff;
@@ -345,4 +320,151 @@ footer p {
         padding: 6px;
     }
 }
+/* Chat Container */
+.chat-container {
+    max-width: 500px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    display: none;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    z-index: 999;
+    transition: all 0.3s ease;
+}
 
+.chat-box {
+    height: 300px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 4px;
+}
+
+.chat-input {
+    display: flex;
+    gap: 10px;
+    position: relative;
+    z-index: 1001;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.chat-input button {
+    padding: 8px 15px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.chat-input button:hover {
+    background: #2980b9;
+}
+
+.chat-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1002;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.3s;
+}
+
+.chat-toggle:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+}
+
+.chat-container.chat-active {
+    display: block !important;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    animation: slideIn 0.3s ease-out;
+    z-index: 1000;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive untuk Mobile */
+@media (max-width: 768px) {
+    .chat-container {
+        width: 90%;
+        max-width: none;
+        bottom: 70px;
+        right: 5%;
+        left: 5%;
+        padding: 10px;
+    }
+
+    .chat-box {
+        height: 250px;
+    }
+
+    .chat-input input {
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    .chat-input button {
+        padding: 10px;
+    }
+
+    .chat-toggle {
+        bottom: 10px;
+        right: 10px;
+        padding: 8px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chat-container {
+        bottom: 60px;
+        padding: 8px;
+    }
+
+    .chat-box {
+        height: 200px;
+        margin-bottom: 10px;
+    }
+
+    .chat-input {
+        gap: 5px;
+    }
+
+    .chat-input input {
+        padding: 8px;
+    }
+
+    .chat-input button {
+        padding: 8px 12px;
+    }
+}
