@@ -229,7 +229,7 @@ function addMessage(message, sender) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Inisialisasi API Gemini
+// Initialize Gemini API
 const GEMINI_API_KEY = 'AIzaSyBa4I3pLN9hT0tFbjG8bG09QT8jqufGhgE';
 
 async function getGeminiResponse(message) {
@@ -242,7 +242,7 @@ async function getGeminiResponse(message) {
             body: JSON.stringify({
                 contents: [{
                     parts: [{
-                        text: message
+                        text: `Tolong jawab pertanyaan berikut dalam Bahasa Indonesia dengan gaya yang ramah dan informal: ${message}`
                     }]
                 }]
             })
@@ -264,43 +264,39 @@ function getBotReply(message) {
     message = message.toLowerCase();
     
     const responses = {
-        'halo': 'Halo! Ada yang bisa saya bantu?',
-        'hai': 'Halo! Ada yang bisa saya bantu?', 
+        'hello': 'Halo! Ada yang bisa saya bantu?',
         'hi': 'Halo! Ada yang bisa saya bantu?',
+        'halo': 'Halo! Ada yang bisa saya bantu?',
+        'hai': 'Halo! Ada yang bisa saya bantu?',
+        'schedule': 'Untuk informasi jadwal kuliah, silakan kunjungi website FTI UNPAM di www.ftiunpam.ac.id',
         'jadwal': 'Untuk informasi jadwal kuliah, silakan kunjungi website FTI UNPAM di www.ftiunpam.ac.id',
         'kuliah': 'Untuk informasi jadwal kuliah, silakan kunjungi website FTI UNPAM di www.ftiunpam.ac.id',
         'tugas': 'Tugas-tugas akan diperbarui secara berkala. Silakan periksa bagian Tugas di halaman utama.',
-        'pembayaran': 'Untuk informasi pembayaran kuliah, silakan hubungi bagian keuangan di lantai 1 gedung A atau cek pengumuman terbaru.',
-        'biaya': 'Untuk informasi pembayaran kuliah, silakan hubungi bagian keuangan di lantai 1 gedung A atau cek pengumuman terbaru.',
+        'assignment': 'Tugas-tugas akan diperbarui secara berkala. Silakan periksa bagian Tugas di halaman utama.',
+        'payment': 'Untuk informasi pembayaran kuliah, silakan hubungi bagian keuangan di lantai 1 gedung A.',
+        'pembayaran': 'Untuk informasi pembayaran kuliah, silakan hubungi bagian keuangan di lantai 1 gedung A.',
+        'thank you': 'Sama-sama! Ada yang bisa saya bantu lagi?',
+        'thanks': 'Sama-sama! Ada yang bisa saya bantu lagi?',
         'terima kasih': 'Sama-sama! Ada yang bisa saya bantu lagi?',
         'makasih': 'Sama-sama! Ada yang bisa saya bantu lagi?',
-        'dosen': 'Untuk informasi tentang dosen pengajar, silakan hubungi bagian akademik di lantai 2 gedung A atau kunjungi website fakultas.',
-        'pengajar': 'Untuk informasi tentang dosen pengajar, silakan hubungi bagian akademik di lantai 2 gedung A atau kunjungi website fakultas.',
-        'ujian': 'Informasi jadwal ujian akan diumumkan melalui website fakultas dan grup kelas. Silakan cek secara berkala.',
-        'uas': 'Informasi jadwal ujian akan diumumkan melalui website fakultas dan grup kelas. Silakan cek secara berkala.',
-        'uts': 'Informasi jadwal ujian akan diumumkan melalui website fakultas dan grup kelas. Silakan cek secara berkala.',
+        'lecturer': 'Untuk informasi tentang dosen pengajar, silakan hubungi bagian akademik.',
+        'dosen': 'Untuk informasi tentang dosen pengajar, silakan hubungi bagian akademik.',
+        'exam': 'Informasi jadwal ujian akan diumumkan melalui website fakultas dan grup kelas.',
+        'ujian': 'Informasi jadwal ujian akan diumumkan melalui website fakultas dan grup kelas.',
         'nilai': 'Untuk melihat nilai dan IPK, silakan login ke portal akademik my.unpam.ac.id',
-        'ipk': 'Untuk melihat nilai dan IPK, silakan login ke portal akademik my.unpam.ac.id',
-        'krs': 'Pengisian KRS dan registrasi dapat dilakukan melalui portal akademik my.unpam.ac.id. Pastikan sudah melunasi pembayaran semester.',
-        'registrasi': 'Pengisian KRS dan registrasi dapat dilakukan melalui portal akademik my.unpam.ac.id. Pastikan sudah melunasi pembayaran semester.',
-        'sertifikat': 'Untuk informasi sertifikat dan SKPI, silakan hubungi bagian akademik fakultas di lantai 2 gedung A.',
-        'skpi': 'Untuk informasi sertifikat dan SKPI, silakan hubungi bagian akademik fakultas di lantai 2 gedung A.',
-        'beasiswa': 'Informasi beasiswa dapat dilihat di pengumuman fakultas atau website kemahasiswaan UNPAM di kemahasiswaan.unpam.ac.id',
-        'wisuda': 'Informasi wisuda akan diumumkan melalui website universitas. Pastikan semua persyaratan sudah dipenuhi.',
-        'ketua kelas': 'Ketua Kelas TPLP 005 adalah Saiyah Awaliyah. Untuk informasi lebih lanjut silakan hubungi melalui email: sudo-apt-get@gmail.com',
-        'saiyah': 'Ketua Kelas TPLP 005 adalah Saiyah Awaliyah. Untuk informasi lebih lanjut silakan hubungi melalui email: sudo-apt-get@gmail.com',
-        'awaliyah': 'Ketua Kelas TPLP 005 adalah Saiyah Awaliyah. Untuk informasi lebih lanjut silakan hubungi melalui email: sudo-apt-get@gmail.com',
-        'kontak ketua kelas': 'Ketua Kelas TPLP 005 adalah Saiyah Awaliyah. Untuk informasi lebih lanjut silakan hubungi melalui email: sudo-apt-get@gmail.com',
-        'siapa ketua kelasnya': 'Ketua Kelas TPLP 005 adalah Saiyah Awaliyah dan Wakil Ketua Kelas adalah Risky Akbar',
-        'bisa bantu': 'Ya, saya bisa membantu Anda terkait perkuliahan di kelas TPLP-005',
-        'senin': 'Jadwal Senin:\n1. METODE PENELITIAN - WASIS HARYONO (08.50-10.30)\n2. DIGITAL ENTREPRENEURSHIP - HADI ZAKARIA (10.30-12.10)\n3. PENGOLAHAN CITRA DIGITAL - DEVI DAMAYANTI (13.00-14.40)\n4. SISTEM INFORMASI MANAJEMEN - HADI ZAKARIA (14.40-16.20)',
-        'selasa': 'Jadwal Selasa:\n1. PEMROGRAMAN WEB I - FAJAR AGUNG NUGROHO (10.30-12.10)\n2. TEKNIK RISET OPERASIONAL - FARIZI ILHAM (13.00-14.40)\n3. MACHINE LEARNING - PERANI ROSYANI (14.40-16.20)',
-        'rabu': 'Jadwal Rabu:\n1. KECERDASAN BUATAN - RISWAL NAFI SIREGAR (10.30-12.10)',
-        'jadwal senin': 'Jadwal Senin:\n1. METODE PENELITIAN - WASIS HARYONO (08.50-10.30)\n2. DIGITAL ENTREPRENEURSHIP - HADI ZAKARIA (10.30-12.10)\n3. PENGOLAHAN CITRA DIGITAL - DEVI DAMAYANTI (13.00-14.40)\n4. SISTEM INFORMASI MANAJEMEN - HADI ZAKARIA (14.40-16.20)',
-        'jadwal selasa': 'Jadwal Selasa:\n1. PEMROGRAMAN WEB I - FAJAR AGUNG NUGROHO (10.30-12.10)\n2. TEKNIK RISET OPERASIONAL - FARIZI ILHAM (13.00-14.40)\n3. MACHINE LEARNING - PERANI ROSYANI (14.40-16.20)', 
-        'jadwal rabu': 'Jadwal Rabu:\n1. KECERDASAN BUATAN - RISWAL NAFI SIREGAR (10.30-12.10)',
-        'mata kuliah': 'Mata Kuliah Semester ini:\n1. METODE PENELITIAN\n2. DIGITAL ENTREPRENEURSHIP\n3. PENGOLAHAN CITRA DIGITAL\n4. SISTEM INFORMASI MANAJEMEN\n5. PEMROGRAMAN WEB I\n6. TEKNIK RISET OPERASIONAL\n7. MACHINE LEARNING\n8. KECERDASAN BUATAN',
-        'daftar dosen': 'Daftar Dosen Pengajar:\n1. WASIS HARYONO\n2. HADI ZAKARIA\n3. DEVI DAMAYANTI\n4. FAJAR AGUNG NUGROHO\n5. FARIZI ILHAM\n6. PERANI ROSYANI\n7. RISWAL NAFI SIREGAR'
+        'grade': 'Untuk melihat nilai dan IPK, silakan login ke portal akademik my.unpam.ac.id',
+        'registration': 'Pengisian KRS dan registrasi dapat dilakukan melalui portal akademik my.unpam.ac.id',
+        'registrasi': 'Pengisian KRS dan registrasi dapat dilakukan melalui portal akademik my.unpam.ac.id',
+        'certificate': 'Untuk informasi sertifikat, silakan hubungi bagian akademik fakultas.',
+        'sertifikat': 'Untuk informasi sertifikat, silakan hubungi bagian akademik fakultas.',
+        'scholarship': 'Informasi beasiswa dapat dilihat di pengumuman fakultas.',
+        'beasiswa': 'Informasi beasiswa dapat dilihat di pengumuman fakultas.',
+        'graduation': 'Informasi wisuda akan diumumkan melalui website universitas.',
+        'wisuda': 'Informasi wisuda akan diumumkan melalui website universitas.',
+        'class leader': 'Ketua Kelas TPLP 005 adalah Saiyah Awaliyah.',
+        'ketua kelas': 'Ketua Kelas TPLP 005 adalah Saiyah Awaliyah.',
+        'help': 'Ya, saya bisa membantu Anda terkait perkuliahan di kelas TPLP-005',
+        'bantu': 'Ya, saya bisa membantu Anda terkait perkuliahan di kelas TPLP-005'
     };
 
     for (let key in responses) {
@@ -309,7 +305,7 @@ function getBotReply(message) {
         }
     }
 
-    return null; // Return null jika tidak ada respon yang cocok
+    return null;
 }
 
 // Fungsi untuk menangani pengiriman pesan
@@ -320,28 +316,21 @@ async function handleMessage() {
 
     if (!message) return;
 
-    // Tampilkan pesan pengguna
     addMessage(message, 'user');
     userInput.value = '';
 
-    // Coba dapatkan respon dari daftar yang sudah ditentukan
     const standardResponse = getBotReply(message);
 
     if (standardResponse) {
-        // Jika ada respon standar, gunakan itu
         addMessage(standardResponse, 'bot');
     } else {
-        // Jika tidak ada respon standar, gunakan Gemini
-        const loadingMessage = 'Sedang memproses pertanyaan Anda...';
-        addMessage(loadingMessage, 'bot');
+        addMessage('Sedang memproses pertanyaan Anda...', 'bot');
         
         try {
             const geminiResponse = await getGeminiResponse(message);
-            // Hapus pesan loading
             chatBox.lastElementChild.remove();
             addMessage(geminiResponse, 'bot');
         } catch (error) {
-            // Hapus pesan loading
             chatBox.lastElementChild.remove();
             addMessage('Maaf, terjadi kesalahan dalam memproses pertanyaan Anda.', 'bot');
         }
@@ -352,7 +341,6 @@ async function handleMessage() {
 document.addEventListener('DOMContentLoaded', () => {
     handleChat();
     
-    // Tambahkan event listener untuk tombol kirim, input enter, dan end chat
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
     const endChatButton = document.getElementById('endChatButton');
